@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
-
-import 'onboarding_page.dart';
+import 'package:onboarding/onboarding/test_firebase.dart';
+import 'package:onboarding/onboardingPage/Onboarding.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -16,12 +17,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _TestState extends State<SplashScreen> {
+  var resultSeen = GetStorage().read("seen");
   @override
   void initState() {
     // one single time
     Timer(
       Duration(seconds: 4),
-      () => Get.to(() => OnboardingPage()),
+      () => Get.to(() => resultSeen == 1 ? TestFireBase() : Onboarding()),
     );
     super.initState();
   }
