@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.onboarding">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
    <application
         android:label="Store 2000"
         android:icon="@mipmap/launcher_icon">
@@ -28,6 +30,7 @@
               android:resource="@drawable/launch_background"
               />
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>

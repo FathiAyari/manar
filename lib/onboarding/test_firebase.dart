@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../upload_image.dart';
 
 var data = FirebaseFirestore.instance;
 
@@ -54,7 +58,7 @@ class _TestFireBaseState extends State<TestFireBase> {
     return true;
   }
 
-  void createAlert(BuildContext context, Size size) {
+/*  void createAlert(BuildContext context, Size size) {
     showDialog(
         builder: (context) {
           return AlertDialog(
@@ -125,7 +129,7 @@ class _TestFireBaseState extends State<TestFireBase> {
           );
         },
         context: context);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +151,19 @@ class _TestFireBaseState extends State<TestFireBase> {
                   alignment: Alignment.center,
                   height: size.height * 0.1,
                   width: size.width,
-                  child: Text(
-                    "List de clients",
-                    style: TextStyle(fontSize: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "List de clients",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Get.to(UploadImage());
+                          },
+                          child: Text("Ajouter un compte"))
+                    ],
                   ),
                 ),
               ),
@@ -171,16 +185,30 @@ class _TestFireBaseState extends State<TestFireBase> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: ListTile(
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    title: Row(
                                       children: [
-                                        Text(
-                                            " Nom :   ${snapshot.data!.docs[index].get("name")}"),
-                                        Text(
-                                            " Prénom :   ${snapshot.data!.docs[index].get("lastname")}"),
-                                        Text(
-                                            " Age :   ${snapshot.data!.docs[index].get("age")}"),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                " Nom :   ${snapshot.data!.docs[index].get("name")}"),
+                                            Text(
+                                                " Prénom :   ${snapshot.data!.docs[index].get("lastname")}"),
+                                            Text(
+                                                " Age :   ${snapshot.data!.docs[index].get("age")}"),
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        CircleAvatar(
+                                          radius: 45,
+                                          backgroundColor: Colors.green,
+                                          child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: NetworkImage(
+                                                "${snapshot.data!.docs[index].get("url")}"),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -196,12 +224,12 @@ class _TestFireBaseState extends State<TestFireBase> {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
+          /*     floatingActionButton: FloatingActionButton(
             onPressed: () {
               createAlert(context, size);
             },
             child: Icon(Icons.add),
-          ),
+          ),*/
         ),
       ),
     );
