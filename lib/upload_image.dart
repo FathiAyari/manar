@@ -77,6 +77,15 @@ class _UploadImageState extends State<UploadImage> {
   TextEditingController lastnameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   bool isLoading = false;
+  bool isSelected = false;
+  bool Sousse = false;
+  bool Mounastir = false;
+  bool Sfax = false;
+  var radio;
+  bool isDark = false;
+  String feminin = "feminin";
+  String masculin = "masculin";
+  String hint = "Selectionner un role ";
   File? _image; // fichier de l'image à selectionnée
   @override
   Widget build(BuildContext context) {
@@ -130,20 +139,108 @@ class _UploadImageState extends State<UploadImage> {
                       ],
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 10,
                     ),
                     buildformulaire(nameController, "Nom de client "),
                     const SizedBox(
-                      height: 40,
+                      height: 10,
                     ),
                     buildformulaire(lastnameController, "Prénom de client "),
                     const SizedBox(
-                      height: 40,
+                      height: 10,
                     ),
                     buildformulaire(ageController, "Age de client "),
                     const SizedBox(
-                      height: 40,
+                      height: 10,
                     ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Container(
+                        child: InputDecorator(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.blueAccent.withOpacity(0.5),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                              hint: Text(hint),
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected = true;
+
+                                  hint = value!;
+                                });
+                              },
+                              items: <String>[
+                                "Role admin",
+                                "Role user",
+                              ].map((String conetnt) {
+                                return DropdownMenuItem(
+                                    value: conetnt, child: Text(" ${conetnt}"));
+                              }).toList(),
+                            ))),
+                      ),
+                    ),
+                    /*      Transform.scale(
+                        scale: 2,
+                        child: Switch(
+                            inactiveThumbImage: AssetImage("assets/day.png"),
+                            activeThumbImage: AssetImage("assets/night.png"),
+                            activeColor: Colors.black.withOpacity(0.5),
+                            inactiveTrackColor: Colors.amber.withOpacity(0.5),
+                            value: isDark,
+                            onChanged: (value) {
+                              setState(() {
+                                isDark = value;
+                              });
+                            })),*/
+                    /*RadioListTile(
+                        title: Text("Feminin"),
+                        value: feminin,
+                        groupValue: radio,
+                        onChanged: (value) {
+                          setState(() {
+                            radio = value;
+                          });
+                        }),
+                    RadioListTile(
+                        title: Text("Masculin"),
+                        value: masculin,
+                        groupValue: radio,
+                        onChanged: (value) {
+                          setState(() {
+                            radio = value;
+                          });
+                        }),*/
+                    /*   CheckboxListTile(
+                        title: Text(" Sousse "),
+                        value: Sousse,
+                        selected: Sousse,
+                        onChanged: (value) {
+                          setState(() {
+                            Sousse = value!;
+                          });
+                        }),
+                    CheckboxListTile(
+                        title: Text(" Mounastir "),
+                        value: Mounastir,
+                        selected: Mounastir,
+                        onChanged: (value) {
+                          setState(() {
+                            Mounastir = value!;
+                          });
+                        }),
+                    CheckboxListTile(
+                        title: Text(" Sfax "),
+                        selected: Sfax,
+                        value: Sfax,
+                        onChanged: (value) {
+                          setState(() {
+                            Sfax = value!;
+                          });
+                        }),*/
                     isLoading
                         ? CircularProgressIndicator()
                         : ElevatedButton(
@@ -173,7 +270,8 @@ class _UploadImageState extends State<UploadImage> {
                                     "url": imageUrl.toString(),
                                     "name": nameController.text,
                                     "lastname": lastnameController.text,
-                                    "age": ageController.text
+                                    "age": ageController.text,
+                                    "role": hint
                                   });
                                   Get.snackbar(
                                     "Store 2000",

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
@@ -138,99 +139,130 @@ class _TestFireBaseState extends State<TestFireBase> {
       child: WillPopScope(
         onWillPop: avoidReturnButton,
         child: Scaffold(
-          backgroundColor: Colors.white70.withOpacity(0.9),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                  ),
-                  alignment: Alignment.center,
-                  height: size.height * 0.1,
-                  width: size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        "List de clients",
-                        style: TextStyle(fontSize: 25),
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            Get.to(UploadImage());
-                          },
-                          child: Text("Ajouter un compte"))
-                    ],
+            backgroundColor: Colors.white70.withOpacity(0.9),
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    alignment: Alignment.center,
+                    height: size.height * 0.1,
+                    width: size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          "List de clients",
+                          style: TextStyle(fontSize: 25),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Get.to(UploadImage());
+                            },
+                            child: Text("Ajouter un compte"))
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: data.collection("clients").snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          itemCount: snapshot.data!.size,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    title: Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                " Nom :   ${snapshot.data!.docs[index].get("name")}"),
-                                            Text(
-                                                " Prénom :   ${snapshot.data!.docs[index].get("lastname")}"),
-                                            Text(
-                                                " Age :   ${snapshot.data!.docs[index].get("age")}"),
-                                          ],
-                                        ),
-                                        Spacer(),
-                                        CircleAvatar(
-                                          radius: 45,
-                                          backgroundColor: Colors.green,
-                                          child: CircleAvatar(
-                                            radius: 40,
-                                            backgroundImage: NetworkImage(
-                                                "${snapshot.data!.docs[index].get("url")}"),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: data.collection("clients").snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.size,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ListTile(
+                                      title: Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  " Nom :   ${snapshot.data!.docs[index].get("name")}"),
+                                              Text(
+                                                  " Prénom :   ${snapshot.data!.docs[index].get("lastname")}"),
+                                              Text(
+                                                  " Age :   ${snapshot.data!.docs[index].get("age")}"),
+                                              Text(
+                                                  " Role :   ${snapshot.data!.docs[index].get("role")}"),
+                                            ],
                                           ),
-                                        )
-                                      ],
+                                          Spacer(),
+                                          CircleAvatar(
+                                            radius: 45,
+                                            backgroundColor: Colors.green,
+                                            child: CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: NetworkImage(
+                                                  "${snapshot.data!.docs[index].get("url")}"),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          });
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
+                              );
+                            });
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          /*     floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              createAlert(context, size);
-            },
-            child: Icon(Icons.add),
-          ),*/
-        ),
+              ],
+            ),
+            floatingActionButton: SpeedDial(
+              icon: Icons.add,
+              children: [
+                SpeedDialChild(
+                    /*  onTap: () {
+                      Get.to(DropDownButton());
+                    },*/
+                    label: "Drop Down Button",
+                    child: Icon(
+                      Icons.supervised_user_circle,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.green),
+                SpeedDialChild(
+                    label: "Checkbox",
+                    child: Icon(
+                      Icons.supervised_user_circle,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.green),
+                SpeedDialChild(
+                    label: "Radio",
+                    child: Icon(
+                      Icons.supervised_user_circle,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.green),
+                SpeedDialChild(
+                    label: "Switch",
+                    child: Icon(
+                      Icons.supervised_user_circle,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.green),
+              ],
+            )),
       ),
     );
   }
