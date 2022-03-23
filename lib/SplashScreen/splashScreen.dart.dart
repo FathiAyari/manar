@@ -6,8 +6,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
-import 'package:onboarding/onboarding/test_firebase.dart';
 import 'package:onboarding/onboardingPage/Onboarding.dart';
+
+import '../contact_home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class _TestState extends State<SplashScreen> {
     // one single time
     Timer(
       Duration(seconds: 4),
-      () => Get.to(() => resultSeen == 1 ? TestFireBase() : Onboarding()),
+      () => Get.to(() => resultSeen == 1 ? contactHomePage() : Onboarding()),
     );
     super.initState();
   }

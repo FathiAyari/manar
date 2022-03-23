@@ -7,7 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../upload_image.dart';
+import '../add_contact.dart';
 
 var data = FirebaseFirestore.instance;
 
@@ -58,79 +58,6 @@ class _TestFireBaseState extends State<TestFireBase> {
         });
     return true;
   }
-
-/*  void createAlert(BuildContext context, Size size) {
-    showDialog(
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Ajouter un client"),
-            content: Container(
-              height: size.height * 0.35,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                        hintText: "Nom de client",
-                        hintStyle: TextStyle(color: Colors.blueAccent),
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                  ),
-                  TextFormField(
-                    controller: lastnameController,
-                    decoration: InputDecoration(
-                        hintText: "Prénom de client",
-                        hintStyle: TextStyle(color: Colors.blueAccent),
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                  ),
-                  TextFormField(
-                    controller: ageController,
-                    decoration: InputDecoration(
-                        hintText: "Age de client",
-                        hintStyle: TextStyle(color: Colors.blueAccent),
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("Annuler"),
-                        style: ElevatedButton.styleFrom(primary: Colors.red),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await data.collection("clients").doc().set({
-                            "name": nameController.text,
-                            "lastname": lastnameController.text,
-                            "age": ageController.text
-                          });
-
-                          nameController.clear();
-                          ageController.clear();
-                          lastnameController.clear();
-                          Navigator.pop(context);
-                        },
-                        child: Text("Confirmer"),
-                        style: ElevatedButton.styleFrom(primary: Colors.green),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        },
-        context: context);
-  }*/
 
   @override
   Widget build(BuildContext context) {
