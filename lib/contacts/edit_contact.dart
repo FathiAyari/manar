@@ -299,59 +299,13 @@ class Contacts extends State<EditContact> {
       validator: (value) {
         if (value!.isEmpty) {
           return "Veuillez entrer votre ${hinttext} ";
+        }
+        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value) &&
+            hinttext == "Adresse email") {
+          return "Veuillez entrer  adresse e-mail  valide ";
         } else
           return null;
       },
-    );
-  }
-
-  TextFormField buildformulaire(
-      TextEditingController fieldController, String hintText) {
-    return TextFormField(
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "champ obligatoire ";
-        } else {
-          return null;
-        }
-      },
-      controller: fieldController,
-      decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.blueAccent),
-          filled: true,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-    );
-  }
-
-  InputDecoration buildInputDecoration(IconData icons, String hinttext,
-      {required Color color}) {
-    return InputDecoration(
-      hintText: hinttext,
-      filled: true,
-      fillColor: Colors.white,
-      prefixIcon: Icon(
-        icons,
-        color: Colors.orange,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: const BorderSide(color: Colors.orange, width: 1.5),
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: const BorderSide(
-          color: Colors.orange,
-          width: 1.5,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: const BorderSide(
-          color: Colors.grey,
-          width: 1.5,
-        ),
-      ),
     );
   }
 }

@@ -8,7 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'package:onboarding/onboardingPage/Onboarding.dart';
 
-import '../contact_home_page.dart';
+import '../contacts/contact_home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

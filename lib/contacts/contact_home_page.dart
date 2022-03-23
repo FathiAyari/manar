@@ -8,7 +8,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import 'contacts/contacts.dart';
+import 'add_contact.dart';
 import 'edit_contact.dart';
 
 var data = FirebaseFirestore.instance;
