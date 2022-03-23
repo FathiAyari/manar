@@ -55,6 +55,7 @@ class _UploadImageState extends State<UploadImage> {
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -111,6 +112,7 @@ class Contacts extends State<EditContact> {
   bool isLoading = false;
   bool isSelected = false;
   var radio;
+  bool changed = false;
   String client = "client";
   String fournisseur = "fournisseur";
   File? _image; // fichier de l'image à selectionnée
@@ -156,6 +158,7 @@ class Contacts extends State<EditContact> {
                                       final temp = File(image!.path);
                                       setState(() {
                                         _image = temp;
+                                        changed = true;
                                       });
                                     },
                                     icon: const Icon(
@@ -219,25 +222,41 @@ class Contacts extends State<EditContact> {
                                           setState(() {
                                             isLoading = true;
                                           });
-                                          /* var image = FirebaseStorage.instance
-                                              .ref(_image!.path);
-                                          var task = image.putFile(
-                                              _image!); //upload au Storage
-                                          var imageUrl = await (await task)
-                                              .ref
-                                              .getDownloadURL();*/
-                                          await data
-                                              .collection('contacts')
-                                              .doc(widget.id)
-                                              .update({
-                                            "name": nameController.text,
-                                            "adresse": adresscontroller.text,
-                                            "email": emailController.text,
-                                            "phone": phoneController.text,
-                                            "etiquette":
-                                                etiquetteController.text,
-                                            "type": radio,
-                                          });
+                                          if (changed) {
+                                            var image = FirebaseStorage.instance
+                                                .ref(_image!.path);
+                                            var task = image.putFile(
+                                                _image!); //upload au Storage
+                                            var imageUrl = await (await task)
+                                                .ref
+                                                .getDownloadURL();
+                                            await data
+                                                .collection('contacts')
+                                                .doc(widget.id)
+                                                .update({
+                                              "name": nameController.text,
+                                              "adresse": adresscontroller.text,
+                                              "email": emailController.text,
+                                              "phone": phoneController.text,
+                                              "etiquette":
+                                                  etiquetteController.text,
+                                              "type": radio,
+                                              "urlImage": imageUrl.toString()
+                                            });
+                                          } else {
+                                            await data
+                                                .collection('contacts')
+                                                .doc(widget.id)
+                                                .update({
+                                              "name": nameController.text,
+                                              "adresse": adresscontroller.text,
+                                              "email": emailController.text,
+                                              "phone": phoneController.text,
+                                              "etiquette":
+                                                  etiquetteController.text,
+                                              "type": radio,
+                                            });
+                                          }
                                           Get.snackbar(
                                             "Store 2000",
                                             "Contact modifié avec success",

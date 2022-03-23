@@ -54,6 +54,7 @@ class _UploadImageState extends State<UploadImage> {
 */
 import 'dart:io';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -206,7 +207,8 @@ class Contacts extends State<Contact> {
                                           .collection('contacts')
                                           .doc()
                                           .set({
-                                        "name": nameController.text,
+                                        "name": StringUtils.capitalize(
+                                            nameController.text),
                                         "adresse": adresscontroller.text,
                                         "email": emailController.text,
                                         "phone": phoneController.text,

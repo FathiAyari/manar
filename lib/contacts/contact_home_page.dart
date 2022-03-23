@@ -21,9 +21,9 @@ class contactHomePage extends StatefulWidget {
 }
 
 class _TestFireBaseState extends State<contactHomePage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController lastnameController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+  bool searching = false;
+  String valueSearch = "";
   Widget Positive() {
     return Container(
       decoration: BoxDecoration(color: Colors.blueAccent),
@@ -62,6 +62,37 @@ class _TestFireBaseState extends State<contactHomePage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    /* searchController.addListener(() {
+      print("value: ${searchController.text}");
+
+      setState(() {});
+    });*/
+  }
+
+  Future search(String value) async {
+    /*  print("ee");
+    var snapshot = await data.collection("contacts").get();
+    //use .data() methode with a document
+    //.get() with document and collections
+//snapshot.docs[0].data()*/
+    if (value.isNotEmpty) {
+      setState(() {
+        valueSearch = value;
+        searching = true;
+      });
+    } else {
+      setState(() {
+        searching = false;
+        print("empty");
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
@@ -93,14 +124,14 @@ class _TestFireBaseState extends State<contactHomePage> {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          onChanged: (value) async {
+                            await search(value);
+                          },
+                          controller: searchController,
                           decoration: InputDecoration(
                             hintText: "Rechercher",
                             filled: true,
                             fillColor: Colors.white,
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.orange,
-                            ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: const BorderSide(
@@ -128,102 +159,205 @@ class _TestFireBaseState extends State<contactHomePage> {
                       ),
                       Container(
                         height: size.height * 0.075,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.green,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                )),
-                            onPressed: () async {},
-                            child: Text("Rechercher")),
+                        child: IconButton(
+                          onPressed: () async {},
+                          icon: Icon(
+                            Icons.search,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
                       )
                     ],
                   ),
                 ),
                 Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: data.collection("contacts").snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                            itemCount: snapshot.data!.size,
-                            itemBuilder: (context, index) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Slidable(
-                                  actionPane: SlidableDrawerActionPane(),
-                                  secondaryActions: [
-                                    IconSlideAction(
-                                      caption: "Supprimer",
-                                      icon: Icons.delete,
-                                      color: Colors.red,
-                                      onTap: () {
-                                        snapshot.data!.docs[index].reference
-                                            .delete();
-                                      },
-                                    ),
-                                    IconSlideAction(
-                                      onTap: () {
-                                        Get.to(EditContact(snapshot
-                                            .data!.docs[index].reference.id));
-                                      },
-                                      caption: "Modifier",
-                                      icon: Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ],
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.white,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ListTile(
-                                          title: Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 45,
-                                                backgroundColor: Colors.green,
-                                                child: CircleAvatar(
-                                                  radius: 40,
-                                                  backgroundImage: NetworkImage(
-                                                      "${snapshot.data!.docs[index].get("urlImage")}"),
+                  child: searching
+                      ? StreamBuilder<QuerySnapshot>(
+                          stream: data
+                              .collection("contacts")
+                              .where('name',
+                                  isGreaterThanOrEqualTo:
+                                      valueSearch.capitalize)
+                              .where('name', isLessThan: valueSearch + 'z')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              return ListView.builder(
+                                  itemCount: snapshot.data!.size,
+                                  itemBuilder: (context, index) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Slidable(
+                                        actionPane: SlidableDrawerActionPane(),
+                                        secondaryActions: [
+                                          IconSlideAction(
+                                            caption: "Supprimer",
+                                            icon: Icons.delete,
+                                            color: Colors.red,
+                                            onTap: () {
+                                              snapshot
+                                                  .data!.docs[index].reference
+                                                  .delete();
+                                            },
+                                          ),
+                                          IconSlideAction(
+                                            onTap: () {
+                                              Get.to(EditContact(snapshot.data!
+                                                  .docs[index].reference.id));
+                                            },
+                                            caption: "Modifier",
+                                            icon: Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                        ],
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Colors.white,
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ListTile(
+                                                title: Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 45,
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      child: CircleAvatar(
+                                                        radius: 40,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${snapshot.data!.docs[index].get("urlImage")}"),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * 0.07,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            " Nom :   ${snapshot.data!.docs[index].get("name")}"),
+                                                        Text(
+                                                            " Adresse :   ${snapshot.data!.docs[index].get("adresse")}"),
+                                                        Text(
+                                                            " Email :   ${snapshot.data!.docs[index].get("email")}"),
+                                                        Text(
+                                                            " Type :   ${snapshot.data!.docs[index].get("type")}"),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: size.width * 0.07,
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      " Nom :   ${snapshot.data!.docs[index].get("name")}"),
-                                                  Text(
-                                                      " Adresse :   ${snapshot.data!.docs[index].get("adresse")}"),
-                                                  Text(
-                                                      " Email :   ${snapshot.data!.docs[index].get("email")}"),
-                                                  Text(
-                                                      " Type :   ${snapshot.data!.docs[index].get("type")}"),
-                                                ],
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
+                                    );
+                                  });
+                            }
+                          },
+                        )
+                      : StreamBuilder<QuerySnapshot>(
+                          stream: data.collection("contacts").snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                  itemCount: snapshot.data!.size,
+                                  itemBuilder: (context, index) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Slidable(
+                                        actionPane: SlidableDrawerActionPane(),
+                                        secondaryActions: [
+                                          IconSlideAction(
+                                            caption: "Supprimer",
+                                            icon: Icons.delete,
+                                            color: Colors.red,
+                                            onTap: () {
+                                              snapshot
+                                                  .data!.docs[index].reference
+                                                  .delete();
+                                            },
+                                          ),
+                                          IconSlideAction(
+                                            onTap: () {
+                                              Get.to(EditContact(snapshot.data!
+                                                  .docs[index].reference.id));
+                                            },
+                                            caption: "Modifier",
+                                            icon: Icons.edit,
+                                            color: Colors.green,
+                                          ),
+                                        ],
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Colors.white,
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: ListTile(
+                                                title: Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 45,
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      child: CircleAvatar(
+                                                        radius: 40,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${snapshot.data!.docs[index].get("urlImage")}"),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * 0.07,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            " Nom :   ${snapshot.data!.docs[index].get("name")}"),
+                                                        Text(
+                                                            " Adresse :   ${snapshot.data!.docs[index].get("adresse")}"),
+                                                        Text(
+                                                            " Email :   ${snapshot.data!.docs[index].get("email")}"),
+                                                        Text(
+                                                            " Type :   ${snapshot.data!.docs[index].get("type")}"),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            } else {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                          },
+                        ),
                 ),
               ],
             ),
